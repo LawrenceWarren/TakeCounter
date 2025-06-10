@@ -1,17 +1,18 @@
 const defaultSettings = {
   currentTake: 1,
+  keyboardShortcutMode: true,
   keyboardShortcuts: {
     incrementCount: "Alt+Shift+=",
     decrementCount: "Alt+Shift+-",
-    resetCount: "Alt+Shift+0"
+    resetCount: "Alt+Shift+0",
   },
-  alwaysOnTop: true
+  alwaysOnTop: true,
 };
 
 function settingsAreValid(settings, schema = defaultSettings) {
   for (const [key, value] of Object.entries(settings)) {
     // Recur into objects and arrays
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
       if (!settingsAreValid(value, schema[key])) {
         return false;
       }
@@ -41,5 +42,5 @@ function settingsAreValid(settings, schema = defaultSettings) {
 
 module.exports = {
   defaultSettings,
-  settingsAreValid
+  settingsAreValid,
 };

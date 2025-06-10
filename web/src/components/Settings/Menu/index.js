@@ -46,6 +46,17 @@ export default function Menu() {
     };
   };
 
+  const filePathToggle = (
+    <div className="container">
+      <h4 className="row border-bottom">Operating mode</h4>
+      <BooleanItem
+        name="Keyboard Shortcut Mode"
+        value={settings.keyboardShortcutMode}
+        onChange={makeSettingChanger("keyboardShortcutMode")}
+      />
+    </div>
+  );
+
   const windowSettings = (
     <div>
       <h4 className="row border-bottom">Window</h4>
@@ -53,6 +64,27 @@ export default function Menu() {
         name="Always On Top"
         value={settings.alwaysOnTop}
         onChange={makeSettingChanger("alwaysOnTop")}
+      />
+    </div>
+  );
+
+  const keyboardSettings = (
+    <div>
+      <h4 className="row border-bottom">Keyboard Shortcuts</h4>
+      <KeyItem
+        name="Increment Count"
+        value={settings.keyboardShortcuts.incrementCount}
+        onChange={makeSettingChanger("keyboardShortcuts", "incrementCount")}
+      />
+      <KeyItem
+        name="Decrement Count"
+        value={settings.keyboardShortcuts.decrementCount}
+        onChange={makeSettingChanger("keyboardShortcuts", "decrementCount")}
+      />
+      <KeyItem
+        name="Reset Count"
+        value={settings.keyboardShortcuts.resetCount}
+        onChange={makeSettingChanger("keyboardShortcuts", "resetCount")}
       />
     </div>
   );
@@ -88,30 +120,15 @@ export default function Menu() {
           ></button>
         </div>
 
-        <p className="container">
-          To change keyboard shortcuts: click the shortcut box, enter the
-          shortcut you want, then click away from the box.
-        </p>
-
+        {settings.keyboardShortcutMode !== undefined && filePathToggle}
         <div className="container">
-          <h4 className="row border-bottom">Keyboard Shortcuts</h4>
-          <KeyItem
-            name="Increment Count"
-            value={settings.keyboardShortcuts.incrementCount}
-            onChange={makeSettingChanger("keyboardShortcuts", "incrementCount")}
-          />
-          <KeyItem
-            name="Decrement Count"
-            value={settings.keyboardShortcuts.decrementCount}
-            onChange={makeSettingChanger("keyboardShortcuts", "decrementCount")}
-          />
-          <KeyItem
-            name="Reset Count"
-            value={settings.keyboardShortcuts.resetCount}
-            onChange={makeSettingChanger("keyboardShortcuts", "resetCount")}
-          />
+          <p className="container">
+            To change keyboard shortcuts: click the shortcut box, enter the
+            shortcut you want, then click away from the box.
+          </p>
 
-          {window.settings === undefined ? undefined : windowSettings}
+          {settings.keyboardShortcuts !== undefined && keyboardSettings}
+          {settings.alwaysOnTop !== undefined && windowSettings}
 
           <h4 className="row border-bottom">Reset</h4>
           <Button className="btn btn-outline-light m-1" onClick={resetSettings}>

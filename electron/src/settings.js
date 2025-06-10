@@ -96,6 +96,33 @@ async function alwaysOnTopInit(mainWindow) {
   return mainWindow;
 }
 
+let keyboardShortcutModeEnabled = false;
+async function keyboardShortcutModeInit(mainWindow) {
+  console.info(
+    `${
+      settings.keyboardShortcutMode ? "Enabling" : "Disabling"
+    } keyboard shortcut mode`
+  );
+  mainWindow.setKeyboardShortcutMode(settings.keyboardShortcutMode);
+  keyboardShortcutModeEnabled = settings.keyboardShortcutMode;
+
+  settingsEmitter.on("change", (settings) => {
+    if (settings.keyboardShortcutMode == keyboardShortcutModeEnabled) {
+      return;
+    }
+
+    console.info(
+      `${
+        settings.keyboardShortcutMode ? "Enabling" : "Disabling"
+      } keyboard shortcut mode`
+    );
+    mainWindow.setKeyboardShortcutMode(settings.keyboardShortcutMode);
+    keyboardShortcutModeEnabled = settings.keyboardShortcutMode;
+  });
+
+  return mainWindow;
+}
+
 module.exports = {
   settingsEmitter,
   getSettings,
@@ -103,4 +130,5 @@ module.exports = {
   changeSettings,
   registerSettingsHandlers,
   alwaysOnTopInit,
+  keyboardShortcutModeInit,
 };

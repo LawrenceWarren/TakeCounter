@@ -4,6 +4,7 @@ const {
   loadSettings,
   registerSettingsHandlers,
   alwaysOnTopInit,
+  keyboardShortcutModeInit,
 } = require("./settings.js");
 const { registerKeyboardShortcuts } = require("./shortcuts.js");
 
@@ -18,6 +19,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     alwaysOnTop: true,
+    keyboardShortcutMode: true,
     webPreferences: {
       devTools: !app.isPackaged,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -44,6 +46,7 @@ app
   .then(registerSettingsHandlers)
   .then(createWindow)
   .then(alwaysOnTopInit)
+  .then(keyboardShortcutModeInit)
   .then(registerKeyboardShortcuts);
 
 // Quit when all windows are closed, except on macOS. There, it's common
