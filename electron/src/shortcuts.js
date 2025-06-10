@@ -1,29 +1,24 @@
-const {
-  globalShortcut
-} = require('electron');
-const {
-  settingsEmitter,
-  getSettings
-} = require('./settings.js');
+const { globalShortcut } = require("electron");
+const { settingsEmitter, getSettings } = require("./settings.js");
 
 function registerCountShortcuts(mainWindow) {
   const shortcuts = getSettings().keyboardShortcuts;
 
   globalShortcut.register(shortcuts.incrementCount, () => {
-    mainWindow.webContents.send('increment-counter');
+    mainWindow.webContents.send("increment-counter");
   });
   globalShortcut.register(shortcuts.decrementCount, () => {
-    mainWindow.webContents.send('decrement-counter');
+    mainWindow.webContents.send("decrement-counter");
   });
   globalShortcut.register(shortcuts.resetCount, () => {
-    mainWindow.webContents.send('reset-counter');
+    mainWindow.webContents.send("reset-counter");
   });
 }
 
 async function registerKeyboardShortcuts(mainWindow) {
   registerCountShortcuts(mainWindow);
 
-  settingsEmitter.on('change', () => {
+  settingsEmitter.on("change", () => {
     globalShortcut.unregisterAll();
     registerCountShortcuts(mainWindow);
   });
@@ -32,5 +27,5 @@ async function registerKeyboardShortcuts(mainWindow) {
 }
 
 module.exports = {
-  registerKeyboardShortcuts
+  registerKeyboardShortcuts,
 };

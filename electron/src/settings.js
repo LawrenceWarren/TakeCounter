@@ -1,17 +1,17 @@
-const EventEmitter = require('node:events');
-const path = require('node:path');
-const fs = require('node:fs/promises');
+const EventEmitter = require("node:events");
+const path = require("node:path");
+const fs = require("node:fs/promises");
 
-const { app, ipcMain } = require('electron');
+const { app, ipcMain } = require("electron");
 
-const { copy } = require('common/util');
+const { copy } = require("common/util");
 
 const { defaultSettings, settingsAreValid } = require("common/settings");
 
 class SettingsEmitter extends EventEmitter {}
 const settingsEmitter = new SettingsEmitter();
 
-const settingsPath = path.join(app.getPath('userData'), 'settings.json');
+const settingsPath = path.join(app.getPath("userData"), "settings.json");
 
 // The main settings object
 let settings;
@@ -19,13 +19,10 @@ function getSettings() {
   return copy(settings);
 }
 
-function resetDefaultSettings()
-{
-  fs.writeFile(
-    settingsPath, 
-    JSON.stringify(defaultSettings), 
-    { encoding: 'utf8' }
-  );
+function resetDefaultSettings() {
+  fs.writeFile(settingsPath, JSON.stringify(defaultSettings), {
+    encoding: "utf8",
+  });
   settings = copy(defaultSettings);
 }
 
@@ -35,7 +32,7 @@ async function loadSettings() {
   let loadedSettings;
 
   try {
-    const settingsJson = await fs.readFile(settingsPath, { encoding: 'utf8' });
+    const settingsJson = await fs.readFile(settingsPath, { encoding: "utf8" });
     loadedSettings = JSON.parse(settingsJson);
   } catch {
     console.warn("Could not load settings, using defaults");
@@ -51,7 +48,7 @@ async function loadSettings() {
   }
 
   console.info("Finished loading settings");
-  settingsEmitter.emit('loaded');
+  settingsEmitter.emit("loaded");
 }
 
 async function changeSettings(newSettings) {
@@ -59,18 +56,18 @@ async function changeSettings(newSettings) {
     try {
       await fs.writeFile(settingsPath, JSON.stringify(newSettings));
       settings = newSettings;
-      settingsEmitter.emit('change', settings);
+      settingsEmitter.emit("change", settings);
     } catch (err) {
       console.warn(`Could not save settings:\n${err}`);
     }
   } else {
-    throw new Error('Tried to save invalid application settings');
+    throw new Error("Tried to save invalid application settings");
   }
 }
 
 async function registerSettingsHandlers() {
-  ipcMain.handle('get-settings', () => copy(settings));
-  ipcMain.handle('change-settings', (event, newSettings) => {
+  ipcMain.handle("get-settings", () => copy(settings));
+  ipcMain.handle("change-settings", (event, newSettings) => {
     changeSettings(newSettings);
     return newSettings;
   });
@@ -78,21 +75,25 @@ async function registerSettingsHandlers() {
 
 let alwaysOnTopEnabled = false;
 async function alwaysOnTopInit(mainWindow) {
-    console.info(`${settings.alwaysOnTop ? "Enabling" : "Disabling"} always on top`);
+  console.info(
+    `${settings.alwaysOnTop ? "Enabling" : "Disabling"} always on top`
+  );
+  mainWindow.setAlwaysOnTop(settings.alwaysOnTop);
+  alwaysOnTopEnabled = settings.alwaysOnTop;
+
+  settingsEmitter.on("change", (settings) => {
+    if (settings.alwaysOnTop == alwaysOnTopEnabled) {
+      return;
+    }
+
+    console.info(
+      `${settings.alwaysOnTop ? "Enabling" : "Disabling"} always on top`
+    );
     mainWindow.setAlwaysOnTop(settings.alwaysOnTop);
     alwaysOnTopEnabled = settings.alwaysOnTop;
+  });
 
-    settingsEmitter.on('change', (settings) => {
-      if (settings.alwaysOnTop == alwaysOnTopEnabled) {
-        return;
-      }
-
-      console.info(`${settings.alwaysOnTop ? "Enabling" : "Disabling"} always on top`);
-      mainWindow.setAlwaysOnTop(settings.alwaysOnTop);
-      alwaysOnTopEnabled = settings.alwaysOnTop;
-    });
-
-    return mainWindow;
+  return mainWindow;
 }
 
 module.exports = {
@@ -101,5 +102,5 @@ module.exports = {
   loadSettings,
   changeSettings,
   registerSettingsHandlers,
-  alwaysOnTopInit
+  alwaysOnTopInit,
 };

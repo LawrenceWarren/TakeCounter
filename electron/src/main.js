@@ -1,14 +1,14 @@
 /* global  MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY, MAIN_WINDOW_WEBPACK_ENTRY */
-const { app, BrowserWindow } = require('electron');
-const { 
-  loadSettings, 
-  registerSettingsHandlers, 
-  alwaysOnTopInit 
-} = require('./settings.js');
-const { registerKeyboardShortcuts } = require('./shortcuts.js');
+const { app, BrowserWindow } = require("electron");
+const {
+  loadSettings,
+  registerSettingsHandlers,
+  alwaysOnTopInit,
+} = require("./settings.js");
+const { registerKeyboardShortcuts } = require("./shortcuts.js");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
+if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
@@ -49,13 +49,13 @@ app
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
