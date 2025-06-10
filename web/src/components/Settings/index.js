@@ -1,35 +1,40 @@
-import React from 'react';
-import { useState, useCallback } from 'react';
+import React from "react";
+import { useState, useCallback } from "react";
 
-import { copy, settingsAreValid } from 'common';
+import { copy, settingsAreValid } from "common";
 import {
   initialSettings,
   SettingsContext,
-  defaultSettings
-} from '../../util/settings';
+  defaultSettings,
+} from "../../util/settings";
 
 export default function Settings({ children }) {
   const [settings, setSettings] = useState(initialSettings);
 
   const get = useCallback(() => copy(settings), [settings]);
 
-  const change = useCallback((newSettings) => {
-    if (settingsAreValid(newSettings)) {
-      setSettings(newSettings);
+  const change = useCallback(
+    (newSettings) => {
+      if (settingsAreValid(newSettings)) {
+        setSettings(newSettings);
 
-      if (window.settings !== undefined) {
-        window.settings.changeSettings(newSettings);
+        if (window.settings !== undefined) {
+          window.settings.changeSettings(newSettings);
+        }
+      } else {
+        console.warn("Invalid settings provided");
       }
-    } else {
-      console.warn("Invalid settings provided");
-    }
-  }, [setSettings]);
+    },
+    [setSettings]
+  );
 
   const reset = useCallback(() => {
     change(defaultSettings);
   }, [change]);
 
-  return <SettingsContext.Provider value={{ get, change, reset }}>
-           { children }
-         </SettingsContext.Provider>
+  return (
+    <SettingsContext.Provider value={{ get, change, reset }}>
+      {children}
+    </SettingsContext.Provider>
+  );
 }

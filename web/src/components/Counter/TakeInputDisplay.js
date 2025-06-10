@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import InputDisplay from '../Input/InputDisplay';
+import InputDisplay from "../Input/InputDisplay";
 
 export default function TakeInputDisplay({ display, onInput }) {
   const inputIsValid = (input) => {
@@ -13,10 +13,12 @@ export default function TakeInputDisplay({ display, onInput }) {
 
   const handleInput = (input) => onInput(BigInt(input));
 
-  return <InputDisplay
-           className="display-1"
-           validateInput={ inputIsValid }
-           onInput={ handleInput }
-           display={ display }
-         />
+  return (
+    <InputDisplay
+      className="display-1"
+      validateInput={inputIsValid}
+      onInput={handleInput}
+      display={display}
+    />
+  );
 }

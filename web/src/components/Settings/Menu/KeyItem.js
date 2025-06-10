@@ -1,15 +1,15 @@
-import React from 'react';
-import { useState, useCallback, useEffect } from 'react';
+import React from "react";
+import { useState, useCallback, useEffect } from "react";
 
-import { setToShortcut } from '../../../util/shortcuts';
+import { setToShortcut } from "../../../util/shortcuts";
 
-import InputDisplay from '../../Input/InputDisplay';
+import InputDisplay from "../../Input/InputDisplay";
 
 const newShortcut = new Set();
 
 export default function KeyItem({ name, value, onChange }) {
-  const [ reading, setReading ] = useState(false);
-  const [ display, setDisplay ] = useState(value);
+  const [reading, setReading] = useState(false);
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     const handler = (event) => {
@@ -18,8 +18,8 @@ export default function KeyItem({ name, value, onChange }) {
     };
 
     if (reading) {
-      window.addEventListener('keydown', handler);
-      return () => window.removeEventListener('keydown', handler);
+      window.addEventListener("keydown", handler);
+      return () => window.removeEventListener("keydown", handler);
     }
   }, [reading, setDisplay]);
 
@@ -36,15 +36,17 @@ export default function KeyItem({ name, value, onChange }) {
     }
   }, [setReading, onChange]);
 
-  return <div className='row justify-content-start'>
-           <h5 className='col'>
-             { name }
-           </h5>
-           <InputDisplay className='col border p-1'
-                         display={ reading ? display : value }
-                         onInput={ () => {} }
-                         onFocus={ handleFocus }
-                         onBlur={ handleBlur }
-                         style={{ minWidth: "20%" }}/>
-         </div>
-};
+  return (
+    <div className="row justify-content-start">
+      <h5 className="col">{name}</h5>
+      <InputDisplay
+        className="col border p-1"
+        display={reading ? display : value}
+        onInput={() => {}}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        style={{ minWidth: "20%" }}
+      />
+    </div>
+  );
+}

@@ -2,9 +2,9 @@
 $body-bg: #282c34;
 
 $theme-colors: (
-  "primary":    #f468f7,
-  "secondary":  #ced900,
-  "danger":     #ff4136,
+  "primary": #f468f7,
+  "secondary": #ced900,
+  "danger": #ff4136,
 );
 
 // Change font to Avenir
@@ -20,9 +20,11 @@ $font-family-base:
   // Android
   "Roboto",
   // Basic web fallback
-  "Helvetica Neue", Arial, sans-serif,
+  "Helvetica Neue",
+  Arial, sans-serif,
   // Emoji fonts
-  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+  "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
 // Fix tooltip color on dark background
 $tooltip-color: white;
@@ -34,9 +36,9 @@ $display-font-sizes: (
   3: 6rem,
   4: 5.5rem,
   5: 5rem,
-  6: 4.5rem
+  6: 4.5rem,
 );
 $display-font-weight: 500;
 
 // Import Bootstrap and its default variables
-@import '~bootstrap/scss/bootstrap.scss';
+@import "~bootstrap/scss/bootstrap.scss";

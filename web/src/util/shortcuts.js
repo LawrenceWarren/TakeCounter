@@ -1,6 +1,6 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from "react";
 
-import { setEquals } from 'common';
+import { setEquals } from "common";
 
 const isMacOS = window.navigator.userAgent.indexOf("Mac") === 0;
 
@@ -19,11 +19,11 @@ const electron_to_web_code_map = {
   Down: "ArrowDown",
   Left: "ArrowLeft",
   Right: "ArrowRight",
-  "numdec": "Decimal",
-  "numadd": "Add",
-  "numsub": "Subtract",
-  "nummult": "Multiply",
-  "numdiv": "Divide",
+  numdec: "Decimal",
+  numadd: "Add",
+  numsub: "Subtract",
+  nummult: "Multiply",
+  numdiv: "Divide",
   num0: "0",
   num1: "1",
   num2: "2",
@@ -34,7 +34,7 @@ const electron_to_web_code_map = {
   num7: "7",
   num8: "8",
   num9: "9",
-}
+};
 let web_key_to_electron_map = {};
 for (const [key, value] of Object.entries(electron_to_web_code_map)) {
   web_key_to_electron_map[value] = key;
@@ -57,22 +57,22 @@ function parseShortcut(shortcutString) {
 }
 
 export function setToShortcut(keySet) {
-  let result = '';
+  let result = "";
 
   for (const key of keySet) {
     if (web_key_to_electron_map[key] !== undefined) {
-      result += '+';
+      result += "+";
       result += web_key_to_electron_map[key];
       continue;
     }
 
     if (key.length === 1) {
-      result += '+';
+      result += "+";
       result += key.toUpperCase();
       continue;
     }
 
-    result += '+';
+    result += "+";
     result += key;
   }
 
@@ -85,18 +85,16 @@ export function useShortcut(callback, shortcut, electronTarget) {
 }
 
 export const keysDown = new Set();
-window.addEventListener('keydown', (event) => {
+window.addEventListener("keydown", (event) => {
   if (event.key.length === 1) {
     keysDown.add(event.key.toUpperCase());
   } else {
     keysDown.add(event.key);
   }
 });
-window.addEventListener('keyup', (event) => {
+window.addEventListener("keyup", (event) => {
   // HACK: Prevent accumulation of alt code characters.
-  if (event.key === "Alt"
-      || event.key === 'Meta'
-      || event.key === 'Super') {
+  if (event.key === "Alt" || event.key === "Meta" || event.key === "Super") {
     keysDown.clear();
   }
   if (event.key.length === 1) {
@@ -115,9 +113,9 @@ export function useWebShortcut(callback, shortcut) {
   }, [callback, shortcut]);
 
   useEffect(() => {
-    window.addEventListener('keydown', handler);
+    window.addEventListener("keydown", handler);
     return () => {
-      window.removeEventListener('keydown', handler);
+      window.removeEventListener("keydown", handler);
     };
   }, [handler, shortcut]);
 }
@@ -136,6 +134,5 @@ export function useElectronShortcut(callback, target) {
     }
 
     target(callback);
-
   }, [callback, targetProps]);
 }

@@ -1,9 +1,9 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-import { defaultSettings } from 'common';
-import { copy, deepFreeze } from 'common';
+import { defaultSettings } from "common";
+import { copy, deepFreeze } from "common";
 
-export { settingsAreValid } from 'common';
+export { settingsAreValid } from "common";
 
 const runningInElectron = window.settings !== undefined;
 
@@ -27,12 +27,12 @@ export async function loadSettings() {
 export let initialSettings = defaultSettings;
 loadSettings().then((settings) => {
   initialSettings = settings;
-})
+});
 
 export const SettingsContext = createContext({
   get: () => initialSettings,
   change: () => {},
-  reset: () => {}
+  reset: () => {},
 });
 
 export const useSettings = (setting) => {
