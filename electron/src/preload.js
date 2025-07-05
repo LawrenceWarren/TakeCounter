@@ -22,3 +22,6 @@ contextBridge.exposeInMainWorld("settings", {
   getSettings: () => ipcRenderer.invoke("get-settings"),
   changeSettings: (settings) => ipcRenderer.invoke("change-settings", settings),
 });
+contextBridge.exposeInMainWorld("electronAPI", {
+  selectDirectory: () => ipcRenderer.invoke("dialog:selectDirectory"),
+});

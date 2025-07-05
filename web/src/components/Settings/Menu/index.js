@@ -1,14 +1,13 @@
 import React from "react";
-import { useContext } from "react";
-
+import { useContext, useRef } from "react";
 import bootstrapIcons from "bootstrap-icons/bootstrap-icons.svg";
-
 import { copy } from "common";
 import { SettingsContext } from "../../../util/settings";
 
 import Button from "../../Button";
 import KeyItem from "./KeyItem";
 import BooleanItem from "./BooleanItem";
+import SelectDirectoryButton from "../SelectDirectoryButton";
 
 const gear = (
   <svg className="bi" width="24" height="24" fill="white">
@@ -17,6 +16,8 @@ const gear = (
 );
 
 export default function Menu() {
+  const inputFile = useRef(null);
+
   const settingsCtx = useContext(SettingsContext);
   const settings = settingsCtx.get();
   const changeSettings = settingsCtx.change;
@@ -46,31 +47,20 @@ export default function Menu() {
     };
   };
 
-  const filePathToggle = (
-    <div className="container">
-      <h4 className="row border-bottom">Operating mode</h4>
-      <BooleanItem
-        name="Keyboard Shortcut Mode"
-        value={settings.keyboardShortcutMode}
-        onChange={makeSettingChanger("keyboardShortcutMode")}
-      />
-    </div>
-  );
-
-  const windowSettings = (
+  const filePathSettings = (
     <div>
-      <h4 className="row border-bottom">Window</h4>
-      <BooleanItem
-        name="Always On Top"
-        value={settings.alwaysOnTop}
-        onChange={makeSettingChanger("alwaysOnTop")}
-      />
+      <SelectDirectoryButton />
     </div>
   );
 
   const keyboardSettings = (
     <div>
       <h4 className="row border-bottom">Keyboard Shortcuts</h4>
+      <i>
+        To change keyboard shortcuts: click the shortcut box, enter the shortcut
+        you want, then click away from the box.
+      </i>
+      <hr />
       <KeyItem
         name="Increment Count"
         value={settings.keyboardShortcuts.incrementCount}
@@ -86,6 +76,44 @@ export default function Menu() {
         value={settings.keyboardShortcuts.resetCount}
         onChange={makeSettingChanger("keyboardShortcuts", "resetCount")}
       />
+    </div>
+  );
+
+  const filePathToggle = (
+    <div>
+      <h4 className="row border-bottom">Operating mode</h4>
+      <BooleanItem
+        name="Keyboard Shortcut Mode"
+        value={settings.keyboardShortcutMode}
+        onChange={makeSettingChanger("keyboardShortcutMode")}
+      />
+      <div className="container">
+        {settings.keyboardShortcuts !== undefined &&
+          settings.keyboardShortcutMode &&
+          keyboardSettings}
+        {settings.keyboardShortcuts !== undefined &&
+          !settings.keyboardShortcutMode &&
+          filePathSettings}
+      </div>
+    </div>
+  );
+
+  const windowSettings = (
+    <div>
+      <h4 className="row border-bottom">Window</h4>
+      <BooleanItem
+        name="Always On Top"
+        value={settings.alwaysOnTop}
+        onChange={makeSettingChanger("alwaysOnTop")}
+      />
+    </div>
+  );
+
+  const resetDefaults = (
+    <div>
+      <Button className="btn btn-outline-light m-1" onClick={resetSettings}>
+        <i>Reset Default Settings</i>
+      </Button>
     </div>
   );
 
@@ -120,21 +148,11 @@ export default function Menu() {
           ></button>
         </div>
 
-        {settings.keyboardShortcutMode !== undefined && filePathToggle}
         <div className="container">
-          <p className="container">
-            To change keyboard shortcuts: click the shortcut box, enter the
-            shortcut you want, then click away from the box.
-          </p>
-
-          {settings.keyboardShortcuts !== undefined && keyboardSettings}
+          {settings.keyboardShortcutMode !== undefined && filePathToggle}
           {settings.alwaysOnTop !== undefined && windowSettings}
-
-          <h4 className="row border-bottom">Reset</h4>
-          <Button className="btn btn-outline-light m-1" onClick={resetSettings}>
-            Reset Default Settings
-          </Button>
         </div>
+        {resetDefaults}
       </div>
     </div>
   );

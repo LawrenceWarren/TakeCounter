@@ -2,7 +2,7 @@ const EventEmitter = require("node:events");
 const path = require("node:path");
 const fs = require("node:fs/promises");
 
-const { app, ipcMain } = require("electron");
+const { app, ipcMain, dialog } = require("electron");
 
 const { copy } = require("common/util");
 
@@ -67,9 +67,20 @@ async function changeSettings(newSettings) {
 
 async function registerSettingsHandlers() {
   ipcMain.handle("get-settings", () => copy(settings));
-  ipcMain.handle("change-settings", (event, newSettings) => {
+  ipcMain.handle("change-settings", (_event, newSettings) => {
     changeSettings(newSettings);
     return newSettings;
+  });
+  ipcMain.handle("dialog:selectDirectory", async () => {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+
+    if (result.canceled) {
+      return null;
+    } else {
+      return result.filePaths[0];
+    }
   });
 }
 
@@ -103,7 +114,7 @@ async function keyboardShortcutModeInit(mainWindow) {
       settings.keyboardShortcutMode ? "Enabling" : "Disabling"
     } keyboard shortcut mode`
   );
-  mainWindow.setKeyboardShortcutMode(settings.keyboardShortcutMode);
+
   keyboardShortcutModeEnabled = settings.keyboardShortcutMode;
 
   settingsEmitter.on("change", (settings) => {
@@ -116,7 +127,6 @@ async function keyboardShortcutModeInit(mainWindow) {
         settings.keyboardShortcutMode ? "Enabling" : "Disabling"
       } keyboard shortcut mode`
     );
-    mainWindow.setKeyboardShortcutMode(settings.keyboardShortcutMode);
     keyboardShortcutModeEnabled = settings.keyboardShortcutMode;
   });
 
